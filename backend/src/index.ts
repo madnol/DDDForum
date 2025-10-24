@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 
+import userRoutes from './routes/userRoutes';
+
 const prisma = new PrismaClient();
 
 const app = express();
@@ -10,21 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors())
 
-
-// Create a new user
-app.post('/users/new', async (req: Request, res: Response) => {
-    // ...
-});
-
-// Edit a user
-app.post('/users/edit/:userId', async (req: Request, res: Response) => {
-    // ...
-});
-
-// Get a user by email
-app.get('/users', async (req: Request, res: Response) => {
-    // ...
-});
+app.use('/users', userRoutes)
 
 const port = process.env.PORT || 3000;
 
