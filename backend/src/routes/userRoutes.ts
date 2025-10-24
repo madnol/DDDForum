@@ -1,9 +1,8 @@
 import { Router } from 'express';
+import { userController } from '../controllers/userController';
 const router = Router();
 
-router.post('/new', async (req, res) => {
-    // ... (spostato dal file principale)
-});
+router.post('/new', userController.createUser);
 
 router.post('/edit/:userId', async (req, res) => {
     // ... (spostato dal file principale)
