@@ -1,8 +1,9 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 
 import userRoutes from './routes/userRoutes';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 const prisma = new PrismaClient();
 
@@ -13,6 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 
 app.use('/users', userRoutes)
+
+app.use(notFoundHandler);
+app.use(errorHandler)
 
 const port = process.env.PORT || 3000;
 
