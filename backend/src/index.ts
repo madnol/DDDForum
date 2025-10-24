@@ -1,11 +1,11 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+
 import cors from 'cors';
 
 import userRoutes from './routes/userRoutes';
-import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
-const prisma = new PrismaClient();
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { prisma } from './database';
 
 const app = express();
 app.use(express.json());
