@@ -4,12 +4,8 @@ const router = Router();
 
 router.post('/new', userController.createUser);
 
-router.post('/edit/:userId', async (req, res) => {
-    // ... (spostato dal file principale)
-});
+router.put('/edit/:userId', userController.editUser);
 
-router.get('/', async (req, res) => {
-    // ... (spostato dal file principale)
-});
+router.get('/', userController.getUserByEmail);
 
 export default router;

@@ -124,7 +124,122 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
     }
 });
 
+export const editUser = asyncHandler(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const { email, username, firstName, lastName } = req.body;
+
+    // Validate userId is a number
+    if (isNaN(parseInt(userId))) {
+        const error: any = new Error('Invalid user ID');
+        error.statusCode = 400;
+        throw error;
+    }
+
+    // Validate email format if provided
+    if (email && !validateEmail(email)) {
+        const error: any = new Error('Invalid email format');
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const emailAlreadyUsed = await prisma.user.findFirst({ where: { email } })
+    const usernameAlreadyTaken = await prisma.user.findFirst({ where: { username } })
+
+    if (emailAlreadyUsed) {
+        const error: any = new Error('Email already in use');
+        error.statusCode = 409;
+        throw error
+    }
+
+    if (usernameAlreadyTaken) {
+        const error: any = new Error('Username already taken');
+        error.statusCode = 409;
+        throw error
+    }
+
+    try {
+        // Check if user exists first
+        const existingUser = await prisma.user.findUnique({
+            where: { id: parseInt(userId) }
+        });
+
+        if (!existingUser) {
+            const error: any = new Error('User not found');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        const user = await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data: {
+                email,
+                username,
+                firstName,
+                lastName
+            }
+        });
+
+        // Remove password from response
+        const { password: _, ...userWithoutPassword } = user;
+
+        res.json({
+            success: true,
+            data: userWithoutPassword
+        });
+    } catch (error: any) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === 'P2002') {
+                error.code = '409';
+                error.message = 'User with this email or username already exists';
+            } else if (error.code === 'P2025') {
+                error.code = '404';
+                error.message = 'User not found';
+            }
+        }
+        throw error;
+    }
+});
+
+
+export const getUserByEmail = asyncHandler(async (req: Request, res: Response) => {
+    const { email } = req.query;
+
+    if (!email || typeof email !== 'string') {
+        const error: any = new Error('Valid email query parameter is required');
+        error.statusCode = 400;
+        throw error;
+    }
+
+    // Validate email format
+    if (!validateEmail(email)) {
+        const error: any = new Error('Invalid email format');
+        error.statusCode = 400;
+        throw error;
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { email }
+    });
+
+    if (!user) {
+        const error: any = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    // Remove password from response
+    const { password: _, ...userWithoutPassword } = user;
+
+    res.json({
+        success: true,
+        data: userWithoutPassword
+    });
+});
+
+
 
 export const userController = {
     createUser,
+    editUser,
+    getUserByEmail
 }
