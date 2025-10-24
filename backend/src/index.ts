@@ -23,3 +23,13 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+prisma.post.findMany({})
+    .then((posts) => console.log('Database connected successfully'))
+    .catch((err) => console.error('Database connection error:', err));
+
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    await prisma.$disconnect();
+    process.exit(0)
+});
