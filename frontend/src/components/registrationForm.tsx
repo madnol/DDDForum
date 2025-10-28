@@ -13,7 +13,6 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
-    // Logic needs to go here
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");

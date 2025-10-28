@@ -1,5 +1,8 @@
+import { Link, useLocation } from "react-router-dom";
+
+import { useUser } from "../contexts/userContext";
+
 import logo from "../assets/dddforumlogo.png";
-import { Link } from "react-router-dom";
 
 const Logo = () => (
     <div id="app-logo">
@@ -16,7 +19,7 @@ const TitleAndSubmission = () => (
 
 const HeaderActionButton = ({ user }: { user: any }) => (
     <div id="header-action-button">
-        {user ? (
+        {user?.username ? (
             <div>
                 <div>{user.username}</div>
                 <u>
@@ -34,12 +37,15 @@ const shouldShowActionButton = (pathName: string) => {
 };
 
 export const Header = () => {
+    const { user } = useUser()
+    const location = useLocation();
+
     return (
         <header id="header" className="flex align-center">
             <Logo />
             <TitleAndSubmission />
             {shouldShowActionButton(location.pathname) ? (
-                <HeaderActionButton user={{ username: '@john' }} />
+                <HeaderActionButton user={{ username: user?.username }} />
             ) : (
                 ""
             )}

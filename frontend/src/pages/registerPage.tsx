@@ -1,5 +1,15 @@
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import type { AxiosError } from "axios";
+
+import { api } from "../api";
+
+import { useUser } from "../contexts/userContext";
+import { useSpinner } from "../contexts/spinnerContext";
+
 import { Layout } from "../components/layout";
 import { RegistrationForm, type RegistrationInput } from "../components/registrationForm";
+
 
 type ValidationResult = {
   success: boolean;
@@ -13,22 +23,33 @@ function validateForm(input: RegistrationInput): ValidationResult {
 }
 
 export const RegisterPage = () => {
+  const { setUser } = useUser()
 
-  const handleSubmitRegistrationForm = (input: RegistrationInput) => {
-    // Logic goes here
-    // Validate the form        
-    // If the form is invalid      
-    // Show an error toast (for invalid input)
-    // If the form is valid, start isLoading    
-    // Make the API call      
-    // If the API call is successful        
-    // Save the user details to the cache        
-    // Stop the spinner        
-    // Show the toast        
-    // In 3 seconds, redirect to the main page           
-    // If the call failed        
-    // Stop the spinner        
-    // Show the toast (for unknown error)
+  const navigate = useNavigate()
+
+  const spinner = useSpinner()
+
+  const handleSubmitRegistrationForm = async (input: RegistrationInput) => {
+    const validationResult = validateForm(input);
+    if (!validationResult.success) {
+      return toast.error(validationResult.errorMessage);
+    }
+
+    spinner.activate()
+    try {
+      const response = await api.register(input);
+
+      setUser(response.data.data)
+      spinner.deactivate();
+      toast.success("Success! Redirecting home.");
+
+      setTimeout(() => { navigate('/') }, 3000)
+    } catch (error) {
+      const { response } = (error as AxiosError<{ error: string; success: boolean }>)
+
+      spinner.deactivate()
+      return toast.error(response?.data.error)
+    }
   };
 
   return (
