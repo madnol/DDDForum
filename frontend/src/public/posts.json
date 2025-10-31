@@ -1,0 +1,75 @@
+{
+    "posts": [
+        {
+            "title": "Il mio primo post",
+            "dateCreated": "2023-10-05T14:30:00Z",
+            "memberPostedBy": {
+                "user": {
+                    "username": "Mario_Rossi"
+                }
+            },
+            "comments": [
+                {}
+            ],
+            "votes": [
+                {
+                    "id": 1,
+                    "postId": 1,
+                    "voteType": "Upvote"
+                },
+                {
+                    "id": 2,
+                    "postId": 1,
+                    "voteType": "Downvote"
+                }
+            ]
+        },
+        {
+            "title": "Nuove feature in arrivo",
+            "dateCreated": "2023-10-06T09:15:00Z",
+            "memberPostedBy": {
+                "user": {
+                    "username": "Admin"
+                }
+            },
+            "comments": [
+                {},
+                {}
+            ],
+            "votes": [
+                {
+                    "id": 3,
+                    "postId": 2,
+                    "voteType": "Upvote"
+                },
+                {
+                    "id": 4,
+                    "postId": 2,
+                    "voteType": "Upvote"
+                },
+                {
+                    "id": 5,
+                    "postId": 2,
+                    "voteType": "Downvote"
+                }
+            ]
+        },
+        {
+            "title": "Discussione su React",
+            "dateCreated": "2023-10-07T16:45:00Z",
+            "memberPostedBy": {
+                "user": {
+                    "username": "React_Lover"
+                }
+            },
+            "comments": [],
+            "votes": [
+                {
+                    "id": 6,
+                    "postId": 3,
+                    "voteType": "Upvote"
+                }
+            ]
+        }
+    ]
+}
